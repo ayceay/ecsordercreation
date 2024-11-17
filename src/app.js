@@ -2,8 +2,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const swaggerUi = require('swagger-ui-express')
-const swaggerFile = require('./.swagger-output.json')
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('./.swagger-output.json');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');

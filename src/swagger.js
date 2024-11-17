@@ -1,3 +1,4 @@
+console.log("swagger is creating...");
 const swaggerAutogen = require('swagger-autogen')({openapi: '3.0.0'});
 
 
