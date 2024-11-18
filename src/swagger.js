@@ -7,7 +7,7 @@ const doc = {
         version: "1.0.0",
         title: "Student API"
     },
-    host: "localhost:3000",
+    host: "localhost:5002",
     basePath: "/",
     schemes: ['http', 'https'],
     consumes: ['application/json'],

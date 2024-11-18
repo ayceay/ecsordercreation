@@ -2,14 +2,16 @@ const express = require('express');
 const Employee = require('../dto/employee');
 const EmployeeRepository = require('../repository/employeeRepository');
 const databasePool = require('../database/databasePool');
+const jwtUtil = require('../security/jwt/jwt-util')
 
 const router = express.Router();
 const employeeRepository = new EmployeeRepository(databasePool);
 
 // Get all employees
-router.get('/', async (req, res) => {
+router.get('/', jwtUtil.authenticateToken, async (req, res) => {
     try {
         const employees = await employeeRepository.getAll();
+
         res.json(employees);
     } catch (error) {
         res.status(500).json({ error: error.message });

@@ -19,9 +19,7 @@ const envs = {
   employeeDatabasePassword : process.env.EMPLOYEE_DATABASE_PASSWORD,
   employeeDatabaseHost : process.env.EMPLOYEE_DATABASE_HOST,
   employeeDatabasePort : process.env.EMPLOYEE_DATABASE_PORT,
-  employeeDatabaseName : process.env.EMPLOYEE_DATABASE_NAME,
+  employeeDatabaseName : process.env.EMPLOYEE_DATABASE_NAME
 };
-console.log("===================> " + envs.employeeDatabaseName);
-console.log("===================> " + envs.employeeDatabasePassword);
 
 module.exports = envs;
