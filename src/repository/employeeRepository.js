@@ -10,8 +10,6 @@ class EmployeeRepository {
     async getAll() {
         try {
             const result = await this.pool.query('SELECT id, first_name, last_name, email FROM employees');
-            console.log("reposritory 1111");
-            console.log(result);
             if(result){
             return result.rows.map(row => Employee.fromDatabaseRow(row));
 
