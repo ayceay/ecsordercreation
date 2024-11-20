@@ -1,36 +1,28 @@
 var express = require('express');
 var router = express.Router();
-const jwt = require('jsonwebtoken');
-const User = require('../dto/user');
-const UserRepository = require('../repository/userRepository');
-const databasePool = require('../database/databasePool');
-const userRepository = new UserRepository(databasePool);
+const userService = require('../service/userService');
+const jwtUtil = require('../security/jwt/jwt-util')
 
 
 /* GET users listing. */
-router.post('/login', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    console.log('username: ' + username + " password: " + password);
-    const user = await userRepository.getByUsername(username);
-    console.log(user);
-    if (user.password != password) {
-      res.send("Username/Password is incorrect!");
-    } else {
+router.post('/login', userService.login);
 
-      const token = generateAccessToken({ username: username });
-      res.json(token);
-    }
-  }
-  catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// Create a new User
+router.post("/", jwtUtil.authenticateToken, userService.create);
 
-  // res.send('respond with a resource');
-});
+// Retrieve all Users
+router.get("/", jwtUtil.authenticateToken, userService.findAll);
 
-function generateAccessToken(username) {
-  return jwt.sign(username, process.env.JWT_SECRET, { expiresIn: '1800s' });
-}
+// Retrieve a single User with id
+router.get("/:id", jwtUtil.authenticateToken, userService.findOne);
+
+// Update a User with id
+router.put("/:id", jwtUtil.authenticateToken, userService.update);
+
+// Delete a User with id
+router.delete("/:id", jwtUtil.authenticateToken, userService.delete);
+
+// Create a new User
+router.delete("/", jwtUtil.authenticateToken, userService.deleteAll);
 
 module.exports = router;

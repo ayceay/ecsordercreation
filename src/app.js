@@ -7,10 +7,6 @@ const swaggerFile = require('./.swagger-output.json');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var employeesRouter = require('./routes/employees');
-
-const DatabaseSchema = require('./database/databaseSchema')
-const databasePool = require('./database/databasePool');
 
 var app = express();
 
@@ -22,10 +18,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/employees', employeesRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-var databaseSchema = new DatabaseSchema(databasePool);
-databaseSchema.initialize();
+const db = require("./dto");
+/**
+ * In development, you may need to drop existing tables and re-sync database. Just use force: true as following code:
+ */
+// db.sequelize.sync({ force: true }).then(() => {
+//     console.log("Drop and re-sync db.");
+//   });
+db.sequelize.sync();
 
 module.exports = app;
