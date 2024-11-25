@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "version": "1.0.0",
-    "title": "Student API",
+    "title": "ECS API",
     "description": ""
   },
   "servers": [
@@ -15,21 +15,11 @@
   ],
   "tags": [
     {
-      "name": "Student",
+      "name": "Ecs",
       "description": "Endpoints"
     }
   ],
   "paths": {
-    "/": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/users/login": {
       "post": {
         "description": "",
@@ -38,22 +28,15 @@
             "description": "OK"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Error retrieving User with username..."
           }
         },
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "username": {
-                    "example": "any"
-                  },
-                  "password": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/Authentication"
               }
             }
           }
@@ -62,7 +45,10 @@
     },
     "/users/": {
       "post": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Create new user.",
         "parameters": [
           {
             "name": "authorization",
@@ -74,7 +60,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -85,39 +83,29 @@
           "403": {
             "description": "Forbidden"
           },
+          "404": {
+            "description": "Not Found"
+          },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Some error occurred while creating the User..."
           }
         },
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "title": {
-                    "example": "any"
-                  },
-                  "name": {
-                    "example": "any"
-                  },
-                  "surname": {
-                    "example": "any"
-                  },
-                  "username": {
-                    "example": "any"
-                  },
-                  "password": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/User"
               }
             }
           }
         }
       },
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Get all users as paginated.",
         "parameters": [
           {
             "name": "authorization",
@@ -150,7 +138,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "get users data as paginated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindAll"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindAll"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -159,7 +159,7 @@
             "description": "Forbidden"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Some error occurred while retrieving users..."
           }
         }
       },
@@ -185,14 +185,17 @@
             "description": "Forbidden"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Some error occurred while removing all Users..."
           }
         }
       }
     },
     "/users/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Get specific user.",
         "parameters": [
           {
             "name": "id",
@@ -212,7 +215,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "User has been founded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -221,12 +236,15 @@
             "description": "Forbidden"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Error retrieving User..."
           }
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Create new user.",
         "parameters": [
           {
             "name": "id",
@@ -255,7 +273,17 @@
             "description": "Forbidden"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Error updating User..."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
           }
         }
       },
@@ -289,8 +317,124 @@
             "description": "Forbidden"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Could not delete User..."
           }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "changed_by": {
+            "type": "string",
+            "example": "-"
+          },
+          "created_at": {
+            "type": "string",
+            "example": "Date.now"
+          },
+          "updated_at": {
+            "type": "string",
+            "example": "null"
+          },
+          "name": {
+            "type": "string",
+            "example": "req.body.name"
+          },
+          "surname": {
+            "type": "string",
+            "example": "req.body.surname"
+          },
+          "username": {
+            "type": "string",
+            "example": "req.body.username"
+          },
+          "password": {
+            "type": "string",
+            "example": "req.body.password"
+          }
+        },
+        "xml": {
+          "name": "User"
+        }
+      },
+      "FindAll": {
+        "type": "object",
+        "properties": {
+          "totalItems": {
+            "type": "number",
+            "example": 3
+          },
+          "tutorials": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "changed_by": {
+                  "type": "string",
+                  "example": "may"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "murat"
+                },
+                "surname": {
+                  "type": "string",
+                  "example": "ay"
+                },
+                "username": {
+                  "type": "string",
+                  "example": "may"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "123"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2024-11-20T19:47:23.616Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "example": "2024-11-20T19:47:23.616Z"
+                }
+              }
+            }
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1
+          },
+          "currentPage": {
+            "type": "number",
+            "example": 0
+          }
+        },
+        "xml": {
+          "name": "FindAll"
+        }
+      },
+      "Authentication": {
+        "type": "object",
+        "properties": {
+          "surname": {
+            "type": "string",
+            "example": "req.body.surname"
+          },
+          "password": {
+            "type": "string",
+            "example": "req.body.password"
+          }
+        },
+        "xml": {
+          "name": "Authentication"
         }
       }
     }

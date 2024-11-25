@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const userService = require('../service/userService');
 const jwtUtil = require('../security/jwt/jwt-util')
 
