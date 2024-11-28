@@ -1,7 +1,10 @@
 const db = require("../dto");
 const jwt = require('jsonwebtoken');
+const qg = require("../query-generator/query-generator-util");
 const User = db.user;
 const Op = db.Sequelize.Op;
+const bcrypt = require('bcrypt');
+const saltRounds = 10; // Typically a value between 10 and 12
 
 const getPagination = (page, size) => {
     const limit = size ? +size : 3;
@@ -33,15 +36,11 @@ exports.create = (req, res) => {
                     }
                 }
             */
-    // Validate request
-    if (!req.body.title) {
-        res.status(400).send({
-            message: "Content can not be empty!"
-        });
-        return; // #swagger.responses[404]
-    }
 
     // Create a user
+    const pwd = req.body.password ? req.body.password : '123';
+    const hash = await encryptPassword(pwd);
+    console.log(hash);
     const user = {
 
         changed_by: '-',
@@ -50,7 +49,7 @@ exports.create = (req, res) => {
         name: req.body.name,
         surname: req.body.surname,
         username: req.body.username,
-        password: req.body.password
+        password: hash
         //
     };
 
@@ -75,11 +74,20 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     /*  #swagger.tags = ['User']
        #swagger.description = 'Get all users as paginated.' */
-    //  #swagger.parameters['page'] = { description: 'page index', required:true, type: number}
-    //  #swagger.parameters['size'] = { description: 'describes how many records are', required:true, type: number}
-    //  #swagger.parameters['title'] = { description: 'title...', type: string }
-    const {page, size, title} = req.query;
-    var condition = title ? {title: {[Op.like]: `%${title}%`}} : null;
+    /*  #swagger.requestBody = {
+                   required: true,
+                   content: {
+                       "application/json": {
+                           schema: {
+                               $ref: "#/components/schemas/Query"
+                           }
+                       }
+                   }
+               }
+           */
+    const {page, size, filter} = req.body;
+
+    let condition = qg.prepareFilterCondition(filter);
 
     const {limit, offset} = getPagination(page, size);
 
@@ -125,6 +133,8 @@ exports.findOne = (req, res) => {
 
 // Find a single Tutorial with an id
 exports.login = async (req, res) => {
+    /*  #swagger.tags = ['User']
+        #swagger.description = 'Login user.' */
     /*  #swagger.requestBody = {
                     required: true,
                     content: {
@@ -167,7 +177,7 @@ exports.login = async (req, res) => {
 // Update a Tutorial by the id in the request
 exports.update = (req, res) => {
     /*  #swagger.tags = ['User']
-           #swagger.description = 'Create new user.' */
+           #swagger.description = 'Update new user.' */
     /*  #swagger.requestBody = {
                     required: true,
                     content: {
@@ -206,6 +216,8 @@ exports.update = (req, res) => {
 
 // Delete a User with the specified id in the request
 exports.delete = (req, res) => {
+    /*  #swagger.tags = ['User']
+        #swagger.description = 'Delete user.' */
     // #swagger.parameters['id'] = { description: 'user id', required:true, type: number}
 
     const id = req.params.id;
@@ -235,6 +247,8 @@ exports.delete = (req, res) => {
 
 // Delete all Users from the database.
 exports.deleteAll = (req, res) => {
+    /*  #swagger.tags = ['User']
+        #swagger.description = 'Delete all user.' */
     User.destroy({
         where: {}, truncate: false
     })
@@ -269,6 +283,20 @@ exports.deleteAll = (req, res) => {
 // };
 
 function generateAccessToken(username) {
-    return jwt.sign(username, process.env.JWT_SECRET, {expiresIn: '1800s'});
+    return jwt.sign(username, process.env.JWT_SECRET, {expiresIn: '24h'});
+}
+
+async function encryptPassword(password) {
+    let hashedPwd;
+    await bcrypt.hash(password, saltRounds, (err, hash) => {
+        if (err) {
+            throw err;
+        }
+
+// Hashing successful, 'hash' contains the hashed password
+        console.log('Hashed password:', hash);
+        hashedPwd = hash;
+    });
+    return  hashedPwd;
 }
   

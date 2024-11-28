@@ -1,14 +1,23 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./.swagger-output.json');
+const cors = require('cors')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
-var app = express();
+const usersRouter = require('./routes/users');
+
+const app = express();
+
+//cors
+// enabling CORS for some specific origins only.
+let corsOptions = {
+    origin : ['http://localhost:4200'],
+}
+
+app.use(cors(corsOptions));
 
 app.use(logger('dev'));
 app.use(express.json());

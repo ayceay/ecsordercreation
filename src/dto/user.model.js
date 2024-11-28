@@ -38,9 +38,10 @@
 // }
 
 // module.exports = User;
+const { DataTypes } = require('sequelize');
 
-module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define('User', {
+module.exports = (sequelize) => {
+    return sequelize.define('User', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -64,10 +65,8 @@ module.exports = (sequelize, DataTypes) => {
             unique: true,
         },
         password: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false,
         },
-    }, { schema: 'ecsplus', underscored: true, freezeTableName: true });
-
-    return User;
+    }, {schema: 'ecsplus', underscored: true, freezeTableName: true});
 };

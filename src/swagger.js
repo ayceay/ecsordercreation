@@ -21,34 +21,31 @@ const doc = {
     components: {
         schemas: {
             User: {
+                id: 1,
                 changed_by: "-",
                 created_at: "Date.now",
                 updated_at: "null",
-                name: "req.body.name",
-                surname: "req.body.surname",
-                username: "req.body.username",
+                $name: "req.body.name",
+                $surname: "req.body.surname",
+                $username: "req.body.username",
                 password: "req.body.password"
             },
             FindAll: {
                 totalItems: 3,
-                tutorials: [
-                    {
-                        id: 1,
-                        changed_by: "may",
-                        name: "murat",
-                        surname: "ay",
-                        username: "may",
-                        password: "123",
-                        createdAt: "2024-11-20T19:47:23.616Z",
-                        updatedAt: "2024-11-20T19:47:23.616Z"
-                    }
-                ],
+                tutorials: {type: "array", allOf:[{$ref: "#components/schemas/User"}]},
                 totalPages: 1,
                 currentPage: 0
             },
             Authentication: {
                 surname: "req.body.surname",
                 password: "req.body.password"
+            },
+            Query: {
+                page: 1,
+                size: 1,
+                filter: {
+                    type: "object", $ref: "#/components/schemas/User"
+                }
             },
         }
     }
