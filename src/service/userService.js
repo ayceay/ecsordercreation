@@ -4,6 +4,7 @@ const qg = require("../query-generator/query-generator-util");
 const User = db.user;
 const Op = db.Sequelize.Op;
 const bcrypt = require('bcrypt');
+const {validationResult} = require("express-validator");
 const saltRounds = 10; // Typically a value between 10 and 12
 
 const getPagination = (page, size) => {
@@ -22,7 +23,7 @@ const getPagingData = (data, page, limit) => {
 };
 
 // Create and Save a new Tutorial
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     /*  #swagger.tags = ['User']
            #swagger.description = 'Create new user.' */
     /*  #swagger.requestBody = {
@@ -36,38 +37,47 @@ exports.create = (req, res) => {
                     }
                 }
             */
+    const errors = validationResult(req)
+    if (errors.isEmpty()) {
+        // in case request params meet the validation criteria
+        const pwd = req.body.password ? req.body.password : '123';
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(pwd, salt);
+        console.log(hashedPassword);
+        const user = {
+
+            changed_by: '-',
+            created_at: Date.now,
+            updated_at: null,
+            name: req.body.name,
+            surname: req.body.surname,
+            username: req.body.username,
+            password: hashedPassword
+            //
+        };
+
+        // Save User in the database
+        User.create(user)
+            .then(data => {
+                res.send(data);
+                /* #swagger.responses[200] = {
+                     description:   "User registered successfully",
+                     schema: { "$ref": "#/components/schemas/User" }
+                } */
+            })
+            .catch(err => {
+                // #swagger.responses[500] = { description: 'Some error occurred while creating the User...' }
+                res.status(500).send({
+                    message: err.message || "Some error occurred while creating the User."
+                });
+            });
+    } else {
+        res.status(422).json({errors: errors.array()});
+    }
+
 
     // Create a user
-    const pwd = req.body.password ? req.body.password : '123';
-    const hash = await encryptPassword(pwd);
-    console.log(hash);
-    const user = {
 
-        changed_by: '-',
-        created_at: Date.now,
-        updated_at: null,
-        name: req.body.name,
-        surname: req.body.surname,
-        username: req.body.username,
-        password: hash
-        //
-    };
-
-    // Save User in the database
-    User.create(user)
-        .then(data => {
-            res.send(data);
-            /* #swagger.responses[200] = {
-                 description:   "User registered successfully",
-                 schema: { "$ref": "#/components/schemas/User" }
-            } */
-        })
-        .catch(err => {
-            // #swagger.responses[500] = { description: 'Some error occurred while creating the User...' }
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the User."
-            });
-        });
 };
 
 // Retrieve all Tutorials from the database.
@@ -154,8 +164,9 @@ exports.login = async (req, res) => {
                     [Op.eq]: username,
                 },
             }
-        }).then(data => {
-            if (data.dataValues.password != password) {
+        }).then(async data => {
+            const passwordMatched = await bcrypt.compare(password, data.dataValues.password);
+            if (!passwordMatched) {
                 res.send("Username/Password is incorrect!");
             } else {
                 const token = generateAccessToken({username: username});
@@ -189,9 +200,12 @@ exports.update = (req, res) => {
                     }
                 }
             */
+    const errors = validationResult(req)
+    if (errors.isEmpty()) {
     const id = req.params.id;
 
     User.update(req.body, {
+        fields: ['name', 'surname', 'username'],
         where: {id: id}
     })
         .then(num => {
@@ -212,6 +226,9 @@ exports.update = (req, res) => {
             // #swagger.responses[500] = { description: 'Error updating User...' }
 
         });
+    } else {
+        res.status(422).json({errors: errors.array()});
+    }
 };
 
 // Delete a User with the specified id in the request

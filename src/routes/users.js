@@ -5,12 +5,11 @@ const jwtUtil = require('../security/jwt/jwt-util');
 const {USER_CREATE_VALIDATOR} = require("../service/validation/user-validator");
 
 
-
 /* GET users listing. */
 router.post('/login', userService.login);
 
 // Create a new User
-router.post("/", jwtUtil.authenticateToken,USER_CREATE_VALIDATOR, userService.create);
+router.post("/", jwtUtil.authenticateToken, USER_CREATE_VALIDATOR, userService.create);
 
 // Retrieve all Users
 router.post("/queryPage", jwtUtil.authenticateToken, userService.findAll);
@@ -19,7 +18,7 @@ router.post("/queryPage", jwtUtil.authenticateToken, userService.findAll);
 router.get("/:id", jwtUtil.authenticateToken, userService.findOne);
 
 // Update a User with id
-router.put("/:id", jwtUtil.authenticateToken, userService.update);
+router.put("/:id", jwtUtil.authenticateToken, USER_CREATE_VALIDATOR, userService.update);
 
 // Delete a User with id
 router.delete("/:id", jwtUtil.authenticateToken, userService.delete);
