@@ -1,11 +1,15 @@
 const db = require("../dto");
 const jwt = require('jsonwebtoken');
+const config = require("../common/config");
 const qg = require("../query-generator/query-generator-util");
 const User = db.user;
 const Op = db.Sequelize.Op;
 const bcrypt = require('bcrypt');
 const {validationResult} = require("express-validator");
-const saltRounds = 10; // Typically a value between 10 and 12
+const ClientError = require("../exception/clientError");
+const ForbiddenError = require("../exception/forbiddenError");
+const CustomError = require("../exception/customError");
+
 
 const getPagination = (page, size) => {
     const limit = size ? +size : 3;
@@ -81,7 +85,7 @@ exports.create = async (req, res) => {
 };
 
 // Retrieve all Tutorials from the database.
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
     /*  #swagger.tags = ['User']
        #swagger.description = 'Get all users as paginated.' */
     /*  #swagger.requestBody = {
@@ -111,10 +115,9 @@ exports.findAll = (req, res) => {
             } */
         })
         .catch(err => {
+
             // #swagger.responses[500] = { description: 'Some error occurred while retrieving users...' }
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving users."
-            });
+            next(new CustomError(err.message || "Some error occurred while retrieving users."));
         });
 };
 
@@ -231,6 +234,50 @@ exports.update = (req, res) => {
     }
 };
 
+// Update a Tutorial by the id in the request
+exports.updatePassword = (req, res) => {
+    /*  #swagger.tags = ['User']
+           #swagger.description = 'Update user password.' */
+    // #swagger.parameters['id'] = { description: 'user id', required:true, type: number}
+
+    /*  #swagger.requestBody = {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            "password": "password"
+                        }
+                    }
+                }
+            */
+    const id = req.params.id;
+    const {password} = req.body;
+    const errors = validationResult(req)
+    if (errors.isEmpty()) {
+    User.findByPk(id)
+        .then(async data => {
+            const salt = await bcrypt.genSalt();
+            const hashedPassword = await bcrypt.hash(password, salt);
+            data.set({
+                password: hashedPassword
+            });
+            await data.save();
+            res.send(data);
+            /* #swagger.responses[200] = {
+                 description:   "User password has been changed",
+                 schema: { "$ref": "#/components/schemas/User" }
+            } */
+        })
+        .catch(err => {
+            res.status(500).send({
+                // #swagger.responses[500] = { description: 'Error retrieving User...' }
+                message: "Error retrieving User with id=" + id
+            });
+        });
+    } else {
+        res.status(422).json({errors: errors.array()});
+    }
+};
+
 // Delete a User with the specified id in the request
 exports.delete = (req, res) => {
     /*  #swagger.tags = ['User']
@@ -281,6 +328,17 @@ exports.deleteAll = (req, res) => {
         });
 };
 
+// Recover a user if present.
+exports.getUser = async username => {
+    return await User.findOne({
+        where: {
+            username: {
+                [Op.eq]: username,
+            },
+        }
+    })
+}
+
 // // find all published User
 // exports.findAllPublished = (req, res) => {
 //     const { page, size } = req.query;
@@ -299,21 +357,16 @@ exports.deleteAll = (req, res) => {
 //         });
 // };
 
-function generateAccessToken(username) {
-    return jwt.sign(username, process.env.JWT_SECRET, {expiresIn: '24h'});
-}
-
-async function encryptPassword(password) {
-    let hashedPwd;
-    await bcrypt.hash(password, saltRounds, (err, hash) => {
-        if (err) {
-            throw err;
-        }
-
-// Hashing successful, 'hash' contains the hashed password
-        console.log('Hashed password:', hash);
-        hashedPwd = hash;
+function generateAccessToken(user) {
+    return jwt.sign({ userId: user.id, username: user.username, role: user.role },
+        config.jwt.secret,
+        {
+        expiresIn: '24h',
+        notBefore: '0', // Cannot use before now, can be configured to be deferred.
+        algorithm: 'HS256',
+        audience: config.jwt.audience,
+        issuer: config.jwt.issuer
     });
-    return  hashedPwd;
 }
+
   

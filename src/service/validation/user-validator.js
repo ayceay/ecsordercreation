@@ -33,5 +33,19 @@ const userCreateValidator = [
         .bail(),
 ];
 
+const userPasswordChangeValidator = [
+    body('password')
+        .trim()
+        .escape()
+        .not()
+        .isEmpty()
+        .withMessage('password can not be empty!')
+        .bail()
+        .isLength({min: 3})
+        .withMessage('Minimum 3 characters required!')
+        .bail()
+];
+
 
 exports.USER_CREATE_VALIDATOR = userCreateValidator
+exports.USER_PASSWORD_CHANGE_VALIDATOR = userPasswordChangeValidator

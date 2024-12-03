@@ -17,6 +17,13 @@ module.exports = {
   PASSWORD: process.env.DATABASE_PASSWORD,
   DB: process.env.DATABASE_NAME,
   dialect: process.env.DATABASE_DIALECT,
+  jwt: {
+    // The secret is used to sign and validate signatures.
+    secret: process.env.JWT_SECRET,
+    // The audience and issuer are used for validation purposes.
+    audience: process.env.JWT_AUDIENCE,
+    issuer: process.env.JWT_ISSUER
+  },
   pool: {
     max: 5,
     min: 0,

@@ -5,6 +5,7 @@ const logger = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./.swagger-output.json');
 const cors = require('cors')
+const {errorHandler} = require("./exception/handler/errorHandler");
 
 
 const usersRouter = require('./routes/users');
@@ -24,10 +25,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 // app.use('/', indexRouter);
+
 app.use('/users', usersRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use(errorHandler);
 
 const db = require("./dto");
 /**
