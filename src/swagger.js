@@ -47,6 +47,26 @@ const doc = {
                     type: "object", $ref: "#/components/schemas/User"
                 }
             },
+            ProductGroup: {
+                id: 1,
+                changed_by: "-",
+                created_at: "Date.now",
+                updated_at: "null",
+                $name: "req.body.name"
+            },
+            ProductGroupQuery: {
+                page: 1,
+                size: 1,
+                filter: {
+                    type: "object", $ref: "#/components/schemas/ProductGroup"
+                }
+            },
+            ProfileGroupPaginationModel: {
+                totalItems: 3,
+                tutorials: {type: "array", allOf:[{$ref: "#components/schemas/ProductGroup"}]},
+                totalPages: 1,
+                currentPage: 0
+            },
         }
     }
 }

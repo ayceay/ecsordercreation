@@ -124,7 +124,7 @@ exports.findAll = (req, res, next) => {
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
     /*  #swagger.tags = ['User']
-   #swagger.description = 'Get specific user.' */
+        #swagger.description = 'Get specific user.' */
     // #swagger.parameters['id'] = { description: 'user id', required:true, type: number}
     const id = req.params.id;
 

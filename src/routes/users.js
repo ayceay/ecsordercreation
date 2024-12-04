@@ -7,11 +7,11 @@ const {asyncHandler} = require("../exception/handler/asyncHandler");
 const {Roles} = require("../dto/user.roles")
 
 
-/* GET users listing. */
-router.post('/login', userService.login);
-
 // Create a new User
 router.post("/", jwtUtil.authenticateToken, USER_CREATE_VALIDATOR, asyncHandler(userService.create));
+
+/* GET users listing. */
+router.post('/login', userService.login);
 
 //user password change
 router.post("/password-change", jwtUtil.authenticateToken, USER_PASSWORD_CHANGE_VALIDATOR, asyncHandler(userService.updatePassword));
