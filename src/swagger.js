@@ -52,7 +52,7 @@ const doc = {
                 changed_by: "-",
                 created_at: "Date.now",
                 updated_at: "null",
-                $name: "req.body.name"
+                name: "req.body.name"
             },
             ProductGroupQuery: {
                 page: 1,
@@ -61,11 +61,34 @@ const doc = {
                     type: "object", $ref: "#/components/schemas/ProductGroup"
                 }
             },
-            ProfileGroupPaginationModel: {
+            ProductGroupPaginationModel: {
                 totalItems: 3,
                 tutorials: {type: "array", allOf:[{$ref: "#components/schemas/ProductGroup"}]},
                 totalPages: 1,
                 currentPage: 0
+            },
+            Product: {
+                id: 1,
+                changed_by: "-",
+                created_at: "Date.now",
+                updated_at: "null",
+                name: "req.body.name",
+                price: "req.body.price",
+                max_discount: "req.body.max_discount",
+                $product_group_id: "req.body.product_group_id"
+            },
+            ProductPaginationModel: {
+                totalItems: 3,
+                tutorials: {type: "array", allOf:[{$ref: "#components/schemas/Product"}]},
+                totalPages: 1,
+                currentPage: 0
+            },
+            ProductQuery: {
+                page: 1,
+                size: 1,
+                filter: {
+                    type: "object", $ref: "#/components/schemas/Product"
+                }
             },
         }
     }

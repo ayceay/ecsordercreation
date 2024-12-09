@@ -10,6 +10,7 @@ const {errorHandler} = require("./exception/handler/errorHandler");
 
 const usersRouter = require('./routes/users');
 const productGroupsRouter = require('./routes/product-groups');
+const productsRouter = require('./routes/product');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', usersRouter);
 app.use('/product-groups', productGroupsRouter);
+app.use('/products', productsRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.use(errorHandler);
 

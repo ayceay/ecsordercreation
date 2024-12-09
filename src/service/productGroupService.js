@@ -98,7 +98,7 @@ exports.queryPage = (req, res, next) => {
             res.send(response);
             /* #swagger.responses[200] = {
                  description:   "get product groups data as paginated",
-                 schema: { "$ref": "#/components/schemas/ProfileGroupPaginationModel" }
+                 schema: { "$ref": "#/components/schemas/ProductGroupPaginationModel" }
             } */
         })
         .catch(err => {
