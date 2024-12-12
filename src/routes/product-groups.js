@@ -8,21 +8,51 @@ const {Roles} = require("../dto/user.roles")
 
 
 // Create a new Product Group
-router.post("/", [jwtUtil.authenticateToken,jwtUtil.checkRole([Roles.ADMIN])], PRODUCT_GROUP_CREATE_VALIDATOR, asyncHandler(productGroupService.create));
+router.post("/", [jwtUtil.authenticateToken, jwtUtil.checkRole([Roles.ADMIN])], PRODUCT_GROUP_CREATE_VALIDATOR, (req, res, next) => {
+    /* #swagger.security = [{
+                  "bearerAuth": []
+          }] */
+    return asyncHandler(productGroupService.create(req, res, next));
+});
 
 // Retrieve all Product Groups
-router.post("/queryPage", [jwtUtil.authenticateToken,jwtUtil.checkRole([Roles.ADMIN])], asyncHandler(productGroupService.queryPage));
+router.post("/queryPage", [jwtUtil.authenticateToken, jwtUtil.checkRole([Roles.ADMIN])], (req, res, next) => {
+    /* #swagger.security = [{
+              "bearerAuth": []
+      }] */
+    return asyncHandler(productGroupService.queryPage(req, res, next));
+});
 
 // Retrieve a single product group with id
-router.get("/:id", [jwtUtil.authenticateToken,jwtUtil.checkRole([Roles.ADMIN])], asyncHandler(productGroupService.findOne));
+router.get("/:id", [jwtUtil.authenticateToken, jwtUtil.checkRole([Roles.ADMIN])], (req, res, next) => {
+    /* #swagger.security = [{
+              "bearerAuth": []
+      }] */
+    return asyncHandler(productGroupService.findOne(req, res, next));
+});
 
 // Update a product group with id
-router.put("/:id", [jwtUtil.authenticateToken,jwtUtil.checkRole([Roles.ADMIN])], PRODUCT_GROUP_CREATE_VALIDATOR, asyncHandler(productGroupService.update));
+router.put("/:id", [jwtUtil.authenticateToken, jwtUtil.checkRole([Roles.ADMIN])], PRODUCT_GROUP_CREATE_VALIDATOR, (req, res, next) => {
+    /* #swagger.security = [{
+              "bearerAuth": []
+      }] */
+    return asyncHandler(productGroupService.update(req, res, next));
+});
 
 // Delete a product group with id
-router.delete("/:id", [jwtUtil.authenticateToken,jwtUtil.checkRole([Roles.ADMIN])], asyncHandler(productGroupService.delete));
+router.delete("/:id", [jwtUtil.authenticateToken, jwtUtil.checkRole([Roles.ADMIN])], (req, res, next) => {
+    /* #swagger.security = [{
+              "bearerAuth": []
+      }] */
+    return asyncHandler(productGroupService.delete(req, res, next));
+});
 
 // Create a new product group
-router.delete("/", [jwtUtil.authenticateToken,jwtUtil.checkRole([Roles.ADMIN])], asyncHandler(productGroupService.deleteAll));
+router.delete("/", [jwtUtil.authenticateToken, jwtUtil.checkRole([Roles.ADMIN])], (req, res, next) => {
+    /* #swagger.security = [{
+              "bearerAuth": []
+      }] */
+    return asyncHandler(productGroupService.deleteAll(req, res, next));
+});
 
 module.exports = router;

@@ -22,7 +22,10 @@
   "paths": {
     "/users/": {
       "post": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Create new user.",
         "parameters": [
           {
             "name": "authorization",
@@ -33,13 +36,52 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Some error occurred while creating the User..."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
           }
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Delete all user.",
         "parameters": [
           {
             "name": "authorization",
@@ -50,10 +92,21 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Some error occurred while removing all Users..."
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/users/login": {
@@ -84,7 +137,10 @@
     },
     "/users/password-change": {
       "post": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Update user password.",
         "parameters": [
           {
             "name": "authorization",
@@ -95,15 +151,49 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "User password has been changed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "password": "password"
+            }
           }
         }
       }
     },
     "/users/queryPage": {
       "post": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Get all users as paginated.",
         "parameters": [
           {
             "name": "authorization",
@@ -114,6 +204,21 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "get users data as paginated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindAll"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindAll"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -122,13 +227,34 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Some error occurred while retrieving users..."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Query"
+              }
+            }
           }
         }
       }
     },
     "/users/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Get specific user.",
         "parameters": [
           {
             "name": "id",
@@ -147,13 +273,36 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "User has been founded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "put": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Update new user.",
         "parameters": [
           {
             "name": "id",
@@ -172,13 +321,40 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Error updating User..."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
           }
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Delete user.",
         "parameters": [
           {
             "name": "id",
@@ -197,15 +373,29 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Could not delete User..."
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/product-groups/": {
       "post": {
-        "description": "",
+        "tags": [
+          "Product Group"
+        ],
+        "description": "Create new product group.",
         "parameters": [
           {
             "name": "authorization",
@@ -216,6 +406,21 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGroup"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGroup"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -224,11 +429,35 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Some error occurred while creating the Product Group..."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductGroup"
+              }
+            }
           }
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Product Group"
+        ],
+        "description": "Delete all product group.",
         "parameters": [
           {
             "name": "authorization",
@@ -239,6 +468,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -247,13 +479,24 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Some error occurred while removing all product groups..."
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/product-groups/queryPage": {
       "post": {
-        "description": "",
+        "tags": [
+          "Product Group"
+        ],
+        "description": "Get all product group as paginated.",
         "parameters": [
           {
             "name": "authorization",
@@ -264,6 +507,21 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "get product groups data as paginated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGroupPaginationModel"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGroupPaginationModel"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -272,13 +530,34 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Some error occurred while retrieving product groups..."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductGroupQuery"
+              }
+            }
           }
         }
       }
     },
     "/product-groups/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Product Group"
+        ],
+        "description": "Get specific product group.",
         "parameters": [
           {
             "name": "id",
@@ -297,6 +576,21 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Product Group has been founded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGroup"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGroup"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -305,11 +599,22 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Error retrieving product group..."
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Product Group"
+        ],
+        "description": "Update new product group.",
         "parameters": [
           {
             "name": "id",
@@ -328,6 +633,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -336,11 +644,35 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Error updating Product Group..."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductGroup"
+              }
+            }
           }
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Product Group"
+        ],
+        "description": "Delete product group.",
         "parameters": [
           {
             "name": "id",
@@ -359,6 +691,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -367,13 +702,24 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Could not delete Product Group..."
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
-    "/product/": {
+    "/products/": {
       "post": {
-        "description": "",
+        "tags": [
+          "Product"
+        ],
+        "description": "Create new product.",
         "parameters": [
           {
             "name": "authorization",
@@ -384,6 +730,21 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Product registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -392,11 +753,35 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Some error occurred while creating the Product..."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
           }
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Product"
+        ],
+        "description": "Delete all product.",
         "parameters": [
           {
             "name": "authorization",
@@ -407,6 +792,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -415,13 +803,24 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Some error occurred while removing all products..."
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
-    "/product/queryPage": {
+    "/products/queryPage": {
       "post": {
-        "description": "",
+        "tags": [
+          "Product"
+        ],
+        "description": "Get all product as paginated.",
         "parameters": [
           {
             "name": "authorization",
@@ -432,6 +831,21 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "get product data as paginated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductPaginationModel"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductPaginationModel"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -440,13 +854,34 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Some error occurred while retrieving product..."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductQuery"
+              }
+            }
           }
         }
       }
     },
-    "/product/{id}": {
+    "/products/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Product"
+        ],
+        "description": "Get specific product.",
         "parameters": [
           {
             "name": "id",
@@ -465,6 +900,21 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Product has been founded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -473,11 +923,22 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Error retrieving product..."
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Product"
+        ],
+        "description": "Update product.",
         "parameters": [
           {
             "name": "id",
@@ -496,6 +957,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -504,11 +968,35 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Error updating Product..."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
           }
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Product"
+        ],
+        "description": "Delete product.",
         "parameters": [
           {
             "name": "id",
@@ -527,6 +1015,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "401": {
             "description": "Unauthorized"
           },
@@ -535,12 +1026,76 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Could not delete Product..."
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/products/qrcode/{id}": {
+      "put": {
+        "tags": [
+          "Product"
+        ],
+        "description": "Update product.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Error updating Product qr code..."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
     "schemas": {
       "User": {
         "type": "object",
@@ -582,7 +1137,10 @@
           "name",
           "surname",
           "username"
-        ]
+        ],
+        "xml": {
+          "name": "User"
+        }
       },
       "FindAll": {
         "type": "object",
@@ -615,6 +1173,9 @@
             "type": "number",
             "example": 0
           }
+        },
+        "xml": {
+          "name": "FindAll"
         }
       },
       "Authentication": {
@@ -628,6 +1189,9 @@
             "type": "string",
             "example": "req.body.password"
           }
+        },
+        "xml": {
+          "name": "Authentication"
         }
       },
       "Query": {
@@ -642,8 +1206,14 @@
             "example": 1
           },
           "filter": {
+            "xml": {
+              "name": "user"
+            },
             "$ref": "#/components/schemas/User"
           }
+        },
+        "xml": {
+          "name": "Query"
         }
       },
       "ProductGroup": {
@@ -669,6 +1239,9 @@
             "type": "string",
             "example": "req.body.name"
           }
+        },
+        "xml": {
+          "name": "ProductGroup"
         }
       },
       "ProductGroupQuery": {
@@ -683,8 +1256,14 @@
             "example": 1
           },
           "filter": {
+            "xml": {
+              "name": "productgroup"
+            },
             "$ref": "#/components/schemas/ProductGroup"
           }
+        },
+        "xml": {
+          "name": "ProductGroupQuery"
         }
       },
       "ProductGroupPaginationModel": {
@@ -718,6 +1297,9 @@
             "type": "number",
             "example": 0
           }
+        },
+        "xml": {
+          "name": "ProductGroupPaginationModel"
         }
       },
       "Product": {
@@ -758,7 +1340,10 @@
         },
         "required": [
           "product_group_id"
-        ]
+        ],
+        "xml": {
+          "name": "Product"
+        }
       },
       "ProductPaginationModel": {
         "type": "object",
@@ -791,6 +1376,9 @@
             "type": "number",
             "example": 0
           }
+        },
+        "xml": {
+          "name": "ProductPaginationModel"
         }
       },
       "ProductQuery": {
@@ -805,8 +1393,14 @@
             "example": 1
           },
           "filter": {
+            "xml": {
+              "name": "product"
+            },
             "$ref": "#/components/schemas/Product"
           }
+        },
+        "xml": {
+          "name": "ProductQuery"
         }
       }
     }

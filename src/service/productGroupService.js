@@ -47,7 +47,7 @@ exports.create = async (req, res, next) => {
             //
         };
 
-        // Save User in the database
+        // Save product group in the database
         productGroup.create(productGroupModel)
             .then(data => {
                 res.send(data);
@@ -72,7 +72,7 @@ exports.create = async (req, res, next) => {
 };
 
 // Retrieve all Produt Group from the database.
-exports.queryPage = (req, res, next) => {
+exports.queryPage = async (req, res, next) => {
     /*  #swagger.tags = ['Product Group']
        #swagger.description = 'Get all product group as paginated.' */
     /*  #swagger.requestBody = {
@@ -109,7 +109,7 @@ exports.queryPage = (req, res, next) => {
 };
 
 // Find a single Product Group with an id
-exports.findOne = (req, res, next) => {
+exports.findOne = async (req, res, next) => {
     /*  #swagger.tags = ['Product Group']
    #swagger.description = 'Get specific product group.' */
     // #swagger.parameters['id'] = { description: 'product group id', required:true, type: number}
@@ -132,7 +132,7 @@ exports.findOne = (req, res, next) => {
 };
 
 // Update a Product Group by the id in the request
-exports.update = (req, res, next) => {
+exports.update = async (req, res, next) => {
     /*  #swagger.tags = ['Product Group']
            #swagger.description = 'Update new product group.' */
     /*  #swagger.requestBody = {
@@ -178,8 +178,8 @@ exports.update = (req, res, next) => {
 };
 
 // Delete a Product Group with the specified id in the request
-exports.delete = (req, res, next) => {
-    /*  #swagger.tags = ['ProductGroup']
+exports.delete = async (req, res, next) => {
+    /*  #swagger.tags = ['Product Group']
         #swagger.description = 'Delete product group.' */
     // #swagger.parameters['id'] = { description: 'product group id', required:true, type: number}
 
@@ -209,8 +209,8 @@ exports.delete = (req, res, next) => {
 };
 
 // Delete all Product Groups from the database.
-exports.deleteAll = (req, res, next) => {
-    /*  #swagger.tags = ['ProductGroup']
+exports.deleteAll = async (req, res, next) => {
+    /*  #swagger.tags = ['Product Group']
         #swagger.description = 'Delete all product group.' */
     productGroup.destroy({
         where: {}, truncate: false

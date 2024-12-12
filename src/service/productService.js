@@ -77,8 +77,8 @@ exports.create = async (req, res, next) => {
 };
 
 // Retrieve all Product from the database.
-exports.queryPage = (req, res, next) => {
-    /*  #swagger.tags = ['Product']
+exports.queryPage = async (req, res, next) => {
+    /* #swagger.tags = ['Product']
        #swagger.description = 'Get all product as paginated.' */
     /*  #swagger.requestBody = {
                    required: true,
@@ -114,7 +114,7 @@ exports.queryPage = (req, res, next) => {
 };
 
 // Find a single Product with an id
-exports.findOne = (req, res, next) => {
+exports.findOne = async (req, res, next) => {
     /*  #swagger.tags = ['Product']
    #swagger.description = 'Get specific product.' */
     // #swagger.parameters['id'] = { description: 'product id', required:true, type: number}
@@ -137,7 +137,7 @@ exports.findOne = (req, res, next) => {
 };
 
 // Update a Product by the id in the request
-exports.update = (req, res, next) => {
+exports.update = async (req, res, next) => {
     /*  #swagger.tags = ['Product']
            #swagger.description = 'Update product.' */
     /*  #swagger.requestBody = {
@@ -222,7 +222,7 @@ exports.updateQrCode = async (req, res, next) => {
 };
 
 // Delete a Product with the specified id in the request
-exports.delete = (req, res, next) => {
+exports.delete = async (req, res, next) => {
     /*  #swagger.tags = ['Product']
         #swagger.description = 'Delete product.' */
     // #swagger.parameters['id'] = { description: 'product id', required:true, type: number}
@@ -253,7 +253,7 @@ exports.delete = (req, res, next) => {
 };
 
 // Delete all Products from the database.
-exports.deleteAll = (req, res, next) => {
+exports.deleteAll = async (req, res, next) => {
     /*  #swagger.tags = ['Product']
         #swagger.description = 'Delete all product.' */
     product.destroy({

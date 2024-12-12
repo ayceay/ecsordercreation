@@ -19,6 +19,12 @@ const doc = {
         }
     ],
     components: {
+        securitySchemes:{
+            bearerAuth: {
+                type: 'http',
+                scheme: 'bearer'
+            }
+        },
         schemas: {
             User: {
                 id: 1,

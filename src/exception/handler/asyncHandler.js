@@ -5,7 +5,5 @@
  * @returns Promise with a catch statement
  */
 export const asyncHandler = fn => (req, res, next) => {
-    console.log("================================================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>asyncHandler<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<=========================================");
-    console.log(fn);
     return Promise.resolve(fn(req, res, next)).catch(next)
 }

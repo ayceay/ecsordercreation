@@ -27,7 +27,7 @@ const getPagingData = (data, page, limit) => {
 };
 
 // Create and Save a new Tutorial
-exports.create = async (req, res) => {
+exports.create = async (req, res, next) => {
     /*  #swagger.tags = ['User']
            #swagger.description = 'Create new user.' */
     /*  #swagger.requestBody = {
@@ -70,10 +70,10 @@ exports.create = async (req, res) => {
                 } */
             })
             .catch(err => {
+                next(new CustomError(
+                    err.message || "Some error occurred while creating the User.")
+                );
                 // #swagger.responses[500] = { description: 'Some error occurred while creating the User...' }
-                res.status(500).send({
-                    message: err.message || "Some error occurred while creating the User."
-                });
             });
     } else {
         res.status(422).json({errors: errors.array()});
@@ -85,7 +85,7 @@ exports.create = async (req, res) => {
 };
 
 // Retrieve all Tutorials from the database.
-exports.findAll = (req, res, next) => {
+exports.findAll = async (req, res, next) => {
     /*  #swagger.tags = ['User']
        #swagger.description = 'Get all users as paginated.' */
     /*  #swagger.requestBody = {
@@ -122,10 +122,11 @@ exports.findAll = (req, res, next) => {
 };
 
 // Find a single Tutorial with an id
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res, next) => {
     /*  #swagger.tags = ['User']
         #swagger.description = 'Get specific user.' */
     // #swagger.parameters['id'] = { description: 'user id', required:true, type: number}
+
     const id = req.params.id;
 
     User.findByPk(id)
@@ -137,15 +138,14 @@ exports.findOne = (req, res) => {
             } */
         })
         .catch(err => {
-            res.status(500).send({
-                // #swagger.responses[500] = { description: 'Error retrieving User...' }
-                message: "Error retrieving User with id=" + id
-            });
+            next(new CustomError(
+                "Error retrieving User with id=" + id)
+            );
         });
 };
 
 // Find a single Tutorial with an id
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
     /*  #swagger.tags = ['User']
         #swagger.description = 'Login user.' */
     /*  #swagger.requestBody = {
@@ -177,9 +177,10 @@ exports.login = async (req, res) => {
             }
         })
             .catch(err => {
-                res.status(500).send({
-                    message: "Error retrieving User with username=" + username
-                });
+                next(new CustomError(
+                    "Error retrieving User with username=" + username)
+                );
+
                 // #swagger.responses[500] = { description: 'Error retrieving User with username...' }
 
             });
@@ -189,7 +190,7 @@ exports.login = async (req, res) => {
 };
 
 // Update a Tutorial by the id in the request
-exports.update = (req, res) => {
+exports.update = async (req, res, next) => {
     /*  #swagger.tags = ['User']
            #swagger.description = 'Update new user.' */
     /*  #swagger.requestBody = {
@@ -205,37 +206,38 @@ exports.update = (req, res) => {
             */
     const errors = validationResult(req)
     if (errors.isEmpty()) {
-    const id = req.params.id;
+        const id = req.params.id;
 
-    User.update(req.body, {
-        fields: ['name', 'surname', 'username'],
-        where: {id: id}
-    })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "User was updated successfully."
-                });
-            } else {
-                res.send({
-                    message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
-                });
-            }
+        User.update(req.body, {
+            fields: ['name', 'surname', 'username'],
+            where: {id: id}
         })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error updating User with id=" + id
-            });
-            // #swagger.responses[500] = { description: 'Error updating User...' }
+            .then(num => {
+                if (num == 1) {
+                    res.send({
+                        message: "User was updated successfully."
+                    });
+                } else {
+                    res.send({
+                        message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
+                    });
+                }
+            })
+            .catch(err => {
+                next(new CustomError(
+                    "Error updating User with id=" + id)
+                );
 
-        });
+                // #swagger.responses[500] = { description: 'Error updating User...' }
+
+            });
     } else {
         res.status(422).json({errors: errors.array()});
     }
 };
 
 // Update a Tutorial by the id in the request
-exports.updatePassword = (req, res) => {
+exports.updatePassword = async (req, res, next) => {
     /*  #swagger.tags = ['User']
            #swagger.description = 'Update user password.' */
     // #swagger.parameters['id'] = { description: 'user id', required:true, type: number}
@@ -253,33 +255,32 @@ exports.updatePassword = (req, res) => {
     const {password} = req.body;
     const errors = validationResult(req)
     if (errors.isEmpty()) {
-    User.findByPk(id)
-        .then(async data => {
-            const salt = await bcrypt.genSalt();
-            const hashedPassword = await bcrypt.hash(password, salt);
-            data.set({
-                password: hashedPassword
+        User.findByPk(id)
+            .then(async data => {
+                const salt = await bcrypt.genSalt();
+                const hashedPassword = await bcrypt.hash(password, salt);
+                data.set({
+                    password: hashedPassword
+                });
+                await data.save();
+                res.send(data);
+                /* #swagger.responses[200] = {
+                     description:   "User password has been changed",
+                     schema: { "$ref": "#/components/schemas/User" }
+                } */
+            })
+            .catch(err => {
+                next(new CustomError(
+                    "Error updating password, id=" + id)
+                );
             });
-            await data.save();
-            res.send(data);
-            /* #swagger.responses[200] = {
-                 description:   "User password has been changed",
-                 schema: { "$ref": "#/components/schemas/User" }
-            } */
-        })
-        .catch(err => {
-            res.status(500).send({
-                // #swagger.responses[500] = { description: 'Error retrieving User...' }
-                message: "Error retrieving User with id=" + id
-            });
-        });
     } else {
         res.status(422).json({errors: errors.array()});
     }
 };
 
 // Delete a User with the specified id in the request
-exports.delete = (req, res) => {
+exports.delete = async (req, res, next) => {
     /*  #swagger.tags = ['User']
         #swagger.description = 'Delete user.' */
     // #swagger.parameters['id'] = { description: 'user id', required:true, type: number}
@@ -301,16 +302,17 @@ exports.delete = (req, res) => {
             }
         })
         .catch(err => {
-            res.status(500).send({
-                message: "Could not delete User with id=" + id
-            });
+            next(new CustomError(
+                "Could not delete User with id=" + id)
+            );
+
             // #swagger.responses[500] = { description: 'Could not delete User...' }
 
         });
 };
 
 // Delete all Users from the database.
-exports.deleteAll = (req, res) => {
+exports.deleteAll = async (req, res, next) => {
     /*  #swagger.tags = ['User']
         #swagger.description = 'Delete all user.' */
     User.destroy({
@@ -320,9 +322,9 @@ exports.deleteAll = (req, res) => {
             res.send({message: `${nums} Users were deleted successfully!`});
         })
         .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while removing all Users."
-            });
+            next(new CustomError(
+                err.message || "Some error occurred while removing all Users.")
+            );
             // #swagger.responses[500] = { description: 'Some error occurred while removing all Users...' }
 
         });
@@ -358,15 +360,15 @@ exports.getUser = async username => {
 // };
 
 function generateAccessToken(user) {
-    return jwt.sign({ userId: user.id, username: user.username, role: user.role },
+    return jwt.sign({userId: user.id, username: user.username, role: user.role},
         config.jwt.secret,
         {
-        expiresIn: '24h',
-        notBefore: '0', // Cannot use before now, can be configured to be deferred.
-        algorithm: 'HS256',
-        audience: config.jwt.audience,
-        issuer: config.jwt.issuer
-    });
+            expiresIn: '24h',
+            notBefore: '0', // Cannot use before now, can be configured to be deferred.
+            algorithm: 'HS256',
+            audience: config.jwt.audience,
+            issuer: config.jwt.issuer
+        });
 }
 
   

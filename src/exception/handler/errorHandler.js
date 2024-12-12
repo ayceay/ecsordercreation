@@ -10,8 +10,6 @@
 const CustomError = require("../customError");
 
 function errorHandler(err, req, res, next) {
-    console.error("=========================================================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    console.error(err);
     if (!(err instanceof CustomError)) {
         res.status(500).send(
             JSON.stringify({
