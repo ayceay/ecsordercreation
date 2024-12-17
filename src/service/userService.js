@@ -85,7 +85,7 @@ exports.create = async (req, res, next) => {
 };
 
 // Retrieve all Tutorials from the database.
-exports.findAll = async (req, res, next) => {
+exports.queryPage = async (req, res, next) => {
     /*  #swagger.tags = ['User']
        #swagger.description = 'Get all users as paginated.' */
     /*  #swagger.requestBody = {
@@ -93,7 +93,7 @@ exports.findAll = async (req, res, next) => {
                    content: {
                        "application/json": {
                            schema: {
-                               $ref: "#/components/schemas/Query"
+                               $ref: "#/components/schemas/UserQueryModel"
                            }
                        }
                    }
@@ -111,7 +111,7 @@ exports.findAll = async (req, res, next) => {
             res.send(response);
             /* #swagger.responses[200] = {
                  description:   "get users data as paginated",
-                 schema: { "$ref": "#/components/schemas/FindAll" }
+                 schema: { "$ref": "#/components/schemas/UserPaginationModel" }
             } */
         })
         .catch(err => {

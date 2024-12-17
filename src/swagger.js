@@ -36,9 +36,9 @@ const doc = {
                 $username: "req.body.username",
                 password: "req.body.password"
             },
-            FindAll: {
+            UserPaginationModel: {
                 totalItems: 3,
-                tutorials: {type: "array", allOf:[{$ref: "#components/schemas/User"}]},
+                tutorials: [{$ref: "#components/schemas/User"}],
                 totalPages: 1,
                 currentPage: 0
             },
@@ -46,11 +46,13 @@ const doc = {
                 surname: "req.body.surname",
                 password: "req.body.password"
             },
-            Query: {
+            UserQueryModel: {
                 page: 1,
                 size: 1,
                 filter: {
-                    type: "object", $ref: "#/components/schemas/User"
+                    name: "-",
+                    surname: "-",
+                    username: "-",
                 }
             },
             ProductGroup: {
@@ -64,12 +66,12 @@ const doc = {
                 page: 1,
                 size: 1,
                 filter: {
-                    type: "object", $ref: "#/components/schemas/ProductGroup"
+                    name: "-"
                 }
             },
             ProductGroupPaginationModel: {
                 totalItems: 3,
-                tutorials: {type: "array", allOf:[{$ref: "#components/schemas/ProductGroup"}]},
+                tutorials: [{$ref: "#components/schemas/ProductGroup"}],
                 totalPages: 1,
                 currentPage: 0
             },
@@ -85,15 +87,15 @@ const doc = {
             },
             ProductPaginationModel: {
                 totalItems: 3,
-                tutorials: {type: "array", allOf:[{$ref: "#components/schemas/Product"}]},
+                tutorials: [{$ref: "#components/schemas/Product"}],
                 totalPages: 1,
                 currentPage: 0
             },
             ProductQuery: {
                 page: 1,
                 size: 1,
-                filter: {
-                    type: "object", $ref: "#/components/schemas/Product"
+                $filter: {
+                    $name: "-",
                 }
             },
         }

@@ -31,7 +31,7 @@ router.post("/queryPage", [jwtUtil.authenticateToken,jwtUtil.checkRole([Roles.AD
     /* #swagger.security = [{
               "bearerAuth": []
       }] */
-    return asyncHandler(userService.findAll(req, res,next));
+    return asyncHandler(userService.queryPage(req, res,next));
 });
 
 // Retrieve a single User with id

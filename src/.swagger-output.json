@@ -209,12 +209,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FindAll"
+                  "$ref": "#/components/schemas/UserPaginationModel"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/FindAll"
+                  "$ref": "#/components/schemas/UserPaginationModel"
                 }
               }
             }
@@ -242,7 +242,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Query"
+                "$ref": "#/components/schemas/UserQueryModel"
               }
             }
           }
@@ -1142,7 +1142,7 @@
           "name": "User"
         }
       },
-      "FindAll": {
+      "UserPaginationModel": {
         "type": "object",
         "properties": {
           "totalItems": {
@@ -1150,19 +1150,10 @@
             "example": 3
           },
           "tutorials": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "example": "array"
-              },
-              "allOf": {
-                "type": "array",
-                "items": {
-                  "type": "array",
-                  "items": {}
-                }
-              }
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {}
             }
           },
           "totalPages": {
@@ -1175,7 +1166,7 @@
           }
         },
         "xml": {
-          "name": "FindAll"
+          "name": "UserPaginationModel"
         }
       },
       "Authentication": {
@@ -1194,7 +1185,7 @@
           "name": "Authentication"
         }
       },
-      "Query": {
+      "UserQueryModel": {
         "type": "object",
         "properties": {
           "page": {
@@ -1206,14 +1197,25 @@
             "example": 1
           },
           "filter": {
-            "xml": {
-              "name": "user"
-            },
-            "$ref": "#/components/schemas/User"
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "-"
+              },
+              "surname": {
+                "type": "string",
+                "example": "-"
+              },
+              "username": {
+                "type": "string",
+                "example": "-"
+              }
+            }
           }
         },
         "xml": {
-          "name": "Query"
+          "name": "UserQueryModel"
         }
       },
       "ProductGroup": {
@@ -1256,10 +1258,13 @@
             "example": 1
           },
           "filter": {
-            "xml": {
-              "name": "productgroup"
-            },
-            "$ref": "#/components/schemas/ProductGroup"
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "-"
+              }
+            }
           }
         },
         "xml": {
@@ -1274,19 +1279,10 @@
             "example": 3
           },
           "tutorials": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "example": "array"
-              },
-              "allOf": {
-                "type": "array",
-                "items": {
-                  "type": "array",
-                  "items": {}
-                }
-              }
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {}
             }
           },
           "totalPages": {
@@ -1353,19 +1349,10 @@
             "example": 3
           },
           "tutorials": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "example": "array"
-              },
-              "allOf": {
-                "type": "array",
-                "items": {
-                  "type": "array",
-                  "items": {}
-                }
-              }
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {}
             }
           },
           "totalPages": {
@@ -1393,12 +1380,21 @@
             "example": 1
           },
           "filter": {
-            "xml": {
-              "name": "product"
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "-"
+              }
             },
-            "$ref": "#/components/schemas/Product"
+            "required": [
+              "name"
+            ]
           }
         },
+        "required": [
+          "filter"
+        ],
         "xml": {
           "name": "ProductQuery"
         }
