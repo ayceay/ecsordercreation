@@ -1,6 +1,7 @@
 const db = require("../dto");
 const qg = require("../query-generator/query-generator-util");
 const productGroup = db.product_group;
+const product = db.product;
 const {validationResult} = require("express-validator");
 const CustomError = require("../exception/customError");
 
@@ -92,7 +93,7 @@ exports.queryPage = async (req, res, next) => {
 
     const {limit, offset} = getPagination(page, size);
 
-    productGroup.findAndCountAll({where: condition, limit, offset})
+    productGroup.findAndCountAll({where: condition, limit, offset}, {include: [{model: product, as: "prdc"}]})
         .then(data => {
             const response = getPagingData(data, page, limit);
             res.send(response);
@@ -114,8 +115,7 @@ exports.findOne = async (req, res, next) => {
    #swagger.description = 'Get specific product group.' */
     // #swagger.parameters['id'] = { description: 'product group id', required:true, type: number}
     const id = req.params.id;
-
-    productGroup.findByPk(id)
+    productGroup.findByPk(id, {attributes: ['name'], include: [{model: product, attributes: ['name']}]})
         .then(data => {
             res.send(data);
             /* #swagger.responses[200] = {

@@ -1,6 +1,7 @@
 const db = require("../dto");
 const qg = require("../query-generator/query-generator-util");
 const product = db.product;
+const product_group = db.product_group;
 const {validationResult} = require("express-validator");
 const CustomError = require("../exception/customError");
 var QRCode = require('qrcode')
@@ -97,7 +98,11 @@ exports.queryPage = async (req, res, next) => {
 
     const {limit, offset} = getPagination(page, size);
 
-    product.findAndCountAll({where: condition, limit, offset})
+    product.findAndCountAll({include: [{model: product_group, attributes: ['name']}]}, {
+        where: condition,
+        limit,
+        offset
+    })
         .then(data => {
             const response = getPagingData(data, page, limit);
             res.send(response);

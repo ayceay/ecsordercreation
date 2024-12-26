@@ -23,10 +23,6 @@ module.exports = (sequelize) => {
             type: DataTypes.DECIMAL(4,2),
             allowNull: false,
         },
-        product_group_id: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
         qrcode: {
             type: DataTypes.TEXT,
             allowNull: true,
