@@ -95,11 +95,12 @@ exports.queryPage = async (req, res, next) => {
     const {page, size, filter} = req.body;
 
     let condition = qg.prepareFilterCondition(filter);
+    console.log(condition);
 
     const {limit, offset} = getPagination(page, size);
 
-    product.findAndCountAll({include: [{model: product_group, attributes: ['name']}]}, {
-        where: condition,
+    product.findAndCountAll({
+        include: [{model: product_group, attributes: ['name'], required: false}], where: condition,
         limit,
         offset
     })

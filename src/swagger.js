@@ -83,7 +83,10 @@ const doc = {
                 name: "req.body.name",
                 price: "req.body.price",
                 max_discount: "req.body.max_discount",
-                $product_group_id: "req.body.product_group_id"
+                $product_group_id: "req.body.product_group_id",
+                product_group: {
+                    name: "-"
+                }
             },
             ProductPaginationModel: {
                 totalItems: 3,

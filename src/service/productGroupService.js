@@ -72,7 +72,7 @@ exports.create = async (req, res, next) => {
 
 };
 
-// Retrieve all Produt Group from the database.
+// Retrieve all Product Group as paginated from the database.
 exports.queryPage = async (req, res, next) => {
     /*  #swagger.tags = ['Product Group']
        #swagger.description = 'Get all product group as paginated.' */
@@ -100,6 +100,27 @@ exports.queryPage = async (req, res, next) => {
             /* #swagger.responses[200] = {
                  description:   "get product groups data as paginated",
                  schema: { "$ref": "#/components/schemas/ProductGroupPaginationModel" }
+            } */
+        })
+        .catch(err => {
+
+            // #swagger.responses[500] = { description: 'Some error occurred while retrieving product groups...' }
+            next(new CustomError(err.message || "Some error occurred while retrieving product groups."));
+        });
+};
+
+// Retrieve all Product Group from the database.
+exports.findAll = async (req, res, next) => {
+    /*  #swagger.tags = ['Product Group']
+       #swagger.description = 'Get all product group.' */
+
+
+    productGroup.findAll()
+        .then(data => {
+            res.send(data);
+            /* #swagger.responses[200] = {
+                 description:   "get all product group data ",
+                 schema: [{ "$ref": "#/components/schemas/ProductGroup" }]
             } */
         })
         .catch(err => {

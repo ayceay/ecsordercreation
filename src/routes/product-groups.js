@@ -15,12 +15,20 @@ router.post("/", [jwtUtil.authenticateToken, jwtUtil.checkRole([Roles.ADMIN])], 
     return asyncHandler(productGroupService.create(req, res, next));
 });
 
-// Retrieve all Product Groups
+// Retrieve all Product Group as page
 router.post("/queryPage", [jwtUtil.authenticateToken, jwtUtil.checkRole([Roles.ADMIN])], (req, res, next) => {
     /* #swagger.security = [{
               "bearerAuth": []
       }] */
     return asyncHandler(productGroupService.queryPage(req, res, next));
+});
+
+// Retrieve all Product Group
+router.get("/findAll", [jwtUtil.authenticateToken, jwtUtil.checkRole([Roles.ADMIN])], (req, res, next) => {
+    /* #swagger.security = [{
+              "bearerAuth": []
+      }] */
+    return asyncHandler(productGroupService.findAll(req, res, next));
 });
 
 // Retrieve a single product group with id
