@@ -39,5 +39,7 @@ db.order.hasMany(db.order_detail);
 
 db.order.belongsTo(db.customer, {foreignKey: 'customer_id'});
 
+db.order_detail.belongsTo(db.product, {foreignKey: 'product_id'});
+
 
 module.exports = db;

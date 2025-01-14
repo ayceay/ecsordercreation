@@ -1,6 +1,6 @@
 const {body} = require('express-validator');
 
-const customerGroupCreateValidator = [
+const orderCreateValidator = [
     body('name')
         .trim()
         .escape()
@@ -14,4 +14,4 @@ const customerGroupCreateValidator = [
 ];
 
 
-exports.CUSTOMER_GROUP_CREATE_VALIDATOR = customerGroupCreateValidator
+exports.ORDER_CREATE_VALIDATOR = orderCreateValidator

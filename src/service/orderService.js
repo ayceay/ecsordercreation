@@ -1,8 +1,10 @@
 const db = require("../dto");
 const qg = require("../query-generator/query-generator-util");
 const order = db.order;
+const order_detail = db.order_detail;
 const {validationResult} = require("express-validator");
 const CustomError = require("../exception/customError");
+const databaseIndex = require("../dto/index");
 
 
 const getPagination = (page, size) => {
@@ -39,6 +41,13 @@ exports.create = async (req, res, next) => {
     const errors = validationResult(req);
 
     if (errors.isEmpty()) {
+        const {orderDetails} = req.body;
+
+        // Validate input
+        if (!Array.isArray(orderDetails) || orderDetails.length === 0) {
+            return res.status(400).json({ message: "orderDetails must be a non-empty array" });
+        }
+
         // in case request params meet the validation criteria
         const orderModel = {
 
@@ -49,27 +58,33 @@ exports.create = async (req, res, next) => {
             //
         };
         try {
-            await order.transaction(async t => {
+            await databaseIndex.sequelize.transaction(async t => {
+                // Save order in the database
+                const _order = await order.create(orderModel, {transaction: t});
 
-            })
-        } catch (e) {
+                if (orderDetails){
+                    const orderDetailsWithOrderId = orderDetails.map((orderDetail) => ({
+                        ...orderDetail,
+                        changed_by: '-',
+                        created_at: Date.now,
+                        updated_at: null,
+                        order_id: _order.id,
+                    }));
 
-        }
-        // Save order in the database
-        order.create(orderModel)
-            .then(data => {
-                res.send(data);
-                /* #swagger.responses[200] = {
-                     description:   "User registered successfully",
-                     schema: { "$ref": "#/components/schemas/Order" }
-                } */
-            })
-            .catch(err => {
-                // #swagger.responses[500] = { description: 'Some error occurred while creating the Order...' }
-                next(new CustomError(
-                    err.message || "Some error occurred while creating the Order.")
-                );
+                    await order_detail.bulkCreate(orderDetailsWithOrderId, {transaction: t});
+                }
+                    /* #swagger.responses[200] = {
+                                    description:   "User registered successfully",
+                                    schema: { "$ref": "#/components/schemas/Order" }
+                               } */
+                res.send(_order);
             });
+        } catch (err) {
+            // #swagger.responses[500] = { description: 'Some error occurred while creating the Order...' }
+            next(new CustomError(
+                err.message || "Some error occurred while creating the Order."));
+        }
+
     } else {
         res.status(422).json({errors: errors.array()});
     }
@@ -100,7 +115,7 @@ exports.queryPage = async (req, res, next) => {
 
     const {limit, offset} = getPagination(page, size);
 
-    order.findAndCountAll({where: condition, limit, offset})
+    order.findAndCountAll({where: condition, limit, offset}, {include: [{model: order_detail, as: "orderDetails", include: [{model: product, as: "orderDetails"}]}]})
         .then(data => {
             const response = getPagingData(data, page, limit);
             res.send(response);
@@ -183,7 +198,7 @@ exports.update = async (req, res, next) => {
             where: {id: id}
         })
             .then(num => {
-                if (num == 1) {
+                if (num === 1) {
                     res.send({
                         message: "Order was updated successfully."
                     });

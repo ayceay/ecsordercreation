@@ -46,8 +46,9 @@ exports.create = async (req, res, next) => {
             created_at: Date.now,
             updated_at: null,
             name: req.body.name,
-            price: req.body.price,
-            max_discount: req.body.max_discount,
+            surname: req.body.surname,
+            phone: req.body.phone,
+            address: req.body.address,
             customer_group_id: req.body.customer_group_id
 
             //
@@ -162,11 +163,11 @@ exports.update = async (req, res, next) => {
         const id = req.params.id;
 
         customer.update(req.body, {
-            fields: ['name', 'price', 'customer_group_id'],
+            fields: ['name', 'surname', 'phone', 'address', 'customer_group_id'],
             where: {id: id}
         })
             .then(num => {
-                if (num == 1) {
+                if (num === 1) {
                     res.send({
                         message: "Customer was updated successfully."
                     });
