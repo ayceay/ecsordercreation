@@ -2,6 +2,8 @@ const db = require("../dto");
 const qg = require("../query-generator/query-generator-util");
 const order = db.order;
 const order_detail = db.order_detail;
+const product = db.product;
+const customer = db.customer;
 const {validationResult} = require("express-validator");
 const CustomError = require("../exception/customError");
 const databaseIndex = require("../dto/index");
@@ -115,7 +117,23 @@ exports.queryPage = async (req, res, next) => {
 
     const {limit, offset} = getPagination(page, size);
 
-    order.findAndCountAll({where: condition, limit, offset}, {include: [{model: order_detail, as: "orderDetails", include: [{model: product, as: "orderDetails"}]}]})
+    order.findAndCountAll({
+        include: [{
+            model: order_detail, required: false,
+            include: [{
+                model: product,
+                attributes: ["id", "name", "price"],
+                required: false
+            }]
+        },
+        {
+            model: customer,attributes: ["id", "name", "surname"], required: false
+        }
+        ],
+        where: condition,
+        limit,
+        offset
+    })
         .then(data => {
             const response = getPagingData(data, page, limit);
             res.send(response);

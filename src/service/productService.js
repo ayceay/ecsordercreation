@@ -47,6 +47,7 @@ exports.create = async (req, res, next) => {
             updated_at: null,
             name: req.body.name,
             price: req.body.price,
+            unit: req.body.unit,
             max_discount: req.body.max_discount,
             product_group_id: req.body.product_group_id
 
@@ -162,7 +163,7 @@ exports.update = async (req, res, next) => {
         const id = req.params.id;
 
         product.update(req.body, {
-            fields: ['name', 'price', 'product_group_id'],
+            fields: ['name', 'price', 'product_group_id', 'unit'],
             where: {id: id}
         })
             .then(num => {
@@ -199,7 +200,6 @@ exports.updateQrCode = async (req, res, next) => {
     if (errors.isEmpty()) {
         const id = req.params.id;
         let _qrcode = await QRCode.toDataURL('http://www.google.com');
-        console.log("şimdi burdayım");
         console.log(_qrcode);
         product.update({qrcode: _qrcode}, {
             where: {id: id}

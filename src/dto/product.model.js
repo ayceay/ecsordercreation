@@ -15,6 +15,10 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
+        unit: {
+            type: DataTypes.ENUM("k", "m", "p"),
+            allowNull: false
+        },
         price: {
             type: DataTypes.DECIMAL(10,2),
             allowNull: false,

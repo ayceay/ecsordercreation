@@ -19,6 +19,10 @@ module.exports = (sequelize) => {
             type: DataTypes.DECIMAL(4,2),
             allowNull: false,
         },
+        quantity: {
+            type: DataTypes.FLOAT, // Generic numeric field for the value
+            allowNull: false
+        }
     }, {schema: 'ecsplus', underscored: true, freezeTableName: true});
 };
 
