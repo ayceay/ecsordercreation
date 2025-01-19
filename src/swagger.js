@@ -19,7 +19,7 @@ const doc = {
         }
     ],
     components: {
-        securitySchemes:{
+        securitySchemes: {
             bearerAuth: {
                 type: 'http',
                 scheme: 'bearer'
@@ -99,6 +99,84 @@ const doc = {
                 size: 1,
                 $filter: {
                     $name: "-",
+                }
+            },
+            CustomerGroup: {
+                id: 1,
+                changed_by: "-",
+                created_at: "Date.now",
+                updated_at: "null",
+                name: "req.body.name",
+                max_discount: "req.body.max_discount"
+            },
+            CustomerGroupPaginationModel: {
+                totalItems: 3,
+                tutorials: [{$ref: "#components/schemas/CustomerGroup"}],
+                totalPages: 1,
+                currentPage: 0
+            },
+            CustomerGroupQuery: {
+                page: 1,
+                size: 1,
+                $filter: {
+                    $name: "-",
+                }
+            },
+            Customer: {
+                id: 1,
+                changed_by: "-",
+                created_at: "Date.now",
+                updated_at: "null",
+                name: "req.body.name",
+                surname: "req.body.surname",
+                phone: "req.body.phone",
+                address: "req.body.address"
+            },
+            CustomerPaginationModel: {
+                totalItems: 3,
+                tutorials: [{$ref: "#components/schemas/Customer"}],
+                totalPages: 1,
+                currentPage: 0
+            },
+            CustomerQuery: {
+                page: 1,
+                size: 1,
+                $filter: {
+                    name: "-",
+                    surname: "-",
+                    phone: "-",
+                }
+            },
+            OrderDetail: {
+                id: 1,
+                changed_by: "-",
+                created_at: "Date.now",
+                updated_at: "null",
+                discounted_price: "req.body.discounted_price",
+                discount: "req.body.discount",
+                quantity: "req.body.quantity",
+                product_id: "req.body.product_id",
+
+            },
+            Order: {
+                id: 1,
+                changed_by: "-",
+                created_at: "Date.now",
+                updated_at: "null",
+                name: "req.body.name",
+                orderDetails: [{$ref: "#components/schemas/OrderDetail"}]
+            },
+            OrderPaginationModel: {
+                totalItems: 3,
+                tutorials: [{$ref: "#components/schemas/Order"}],
+                totalPages: 1,
+                currentPage: 0
+            },
+            OrderQuery: {
+                page: 1,
+                size: 1,
+                $filter: {
+                    $name: "-"
                 }
             },
         }
