@@ -37,8 +37,8 @@ function authenticateToken(req, res, next) {
     return async (req, res, next) => {
         // Find the user with the requested ID.
         const user = await userService.getUser(req.token.payload.username);
-console.log(user);
-console.log("id: " +  req.token.payload.username );
+        console.log(user);
+        console.log("id: " +  req.token.payload.username );
         // Ensure we found a user.
         if (!user) {
             res

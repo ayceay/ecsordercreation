@@ -43,7 +43,7 @@ const doc = {
                 currentPage: 0
             },
             Authentication: {
-                surname: "req.body.surname",
+                username: "req.body.username",
                 password: "req.body.password"
             },
             UserQueryModel: {
